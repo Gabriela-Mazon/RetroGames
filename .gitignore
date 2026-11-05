@@ -1,0 +1,17 @@
+# Arquivos gerados pelo .NET
+**/bin/
+**/obj/
+
+# Dependências e compilação do front-end
+**/node_modules/
+**/dist/
+
+# Configurações locais e segredos
+.env
+.env.*
+!.env.example
+appsettings.Development.json
+
+# Arquivos do usuário
+*.user
+*.suo
