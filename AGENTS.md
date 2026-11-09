@@ -21,6 +21,10 @@ Este arquivo orienta qualquer assistente de IA usado neste repositório. O Retro
 
 Se duas referências se contradizem, aponte o conflito e pergunte ao estudante qual seguir. Não escolha uma interpretação sem avisar.
 
+### Construção aula a aula
+
+O projeto é construído em etapas, e este arquivo descreve o sistema completo. Muitas classes citadas aqui ainda não existem na aula atual. Antes de propor algo, confira o que já existe no repositório e faça só o que o roteiro da aula pede. Não peça, não crie e não altere arquivos de aulas futuras. Ordem das aulas: aula 1, ambiente, banco e modelos; aula 2, Repository; aula 3, Services (`BusinessErrors` e `BusinessRuleException`); aula 4, API de leitura (`Program.cs`, envelope, `ResponseCodes` 0 a 3, `GlobalExceptionHandler`, Swagger e rotas GET); aula 5, API de gravação (ApiModels de entrada, validators, POST/PUT/DELETE e transação de jogo com gêneros); aula 6, autenticação e proteção da administração; aula 7, front-end. Os testes unitários são uma tarefa adicional, feita fora das aulas; só crie testes quando o estudante estiver nessa tarefa.
+
 ## 3. Regras do projeto
 
 ### Stack
@@ -63,8 +67,9 @@ Se duas referências se contradizem, aponte o conflito e pergunte ao estudante q
 
 - Toda regra de negócio fica aqui, inclusive as que o banco também garante.
 - Dados de várias tabelas são combinados com LINQ e devolvidos em um ServiceModel (exemplo: `JogoDetalheServiceModel`). Filtro que depende de outra tabela também é resolvido aqui, com LINQ (exemplo: filtro por gênero no `JogoService`).
-- Erros de negócio: `throw new BusinessRuleException(BusinessErrors.X)`.
-- `RegistroDuplicadoException` vinda do Repository vira o erro de negócio correspondente (exemplo: `PlataformaNomeDuplicado`).
+- Erros de negócio ficam no catálogo `BusinessErrors` (projeto Services), no formato `(Code, DefaultMessage, Status)`, a partir do código 100. O `Status` é o status HTTP do erro: `HttpStatusCode.BadRequest` (400) para regra violada, `NotFound` (404) para registro não encontrado e `Conflict` (409) para conflito com dados já gravados (nome duplicado, registro com dependentes). O Service lança sempre `throw new BusinessRuleException(BusinessErrors.X)`; não há outras exceções de negócio.
+- Erro de "não encontrado" segue o nome `{ENTIDADE}_NAO_ENCONTRADO(A)`, um por entidade (exemplo: `PLATAFORMA_NAO_ENCONTRADA`).
+- `RegistroDuplicadoException` vinda do Repository vira o erro de negócio correspondente (exemplo: `PLATAFORMA_NOME_DUPLICADO`).
 - Transação só quando a operação grava mais de um comando, sempre neste formato:
 
 ```csharp
@@ -90,8 +95,8 @@ using (var transactionScope = new TransactionScope(TransactionScopeOption.Requir
 ### API
 
 - Toda resposta usa o envelope `{ "responseCode", "data", "errorMessage" }`.
-- Códigos em `ResponseCodes.cs`, sequenciais: `SUCESSO = 0`, `ERRO = 1` e, a partir de 2, tuplas `(Code, DefaultMessage)`. Código novo recebe o próximo número livre.
-- Status HTTP: 200, 201, 400, 401, 403, 404, 409 e 500. Exclusões respondem 200 com o envelope; a API não usa 204.
+- Códigos da própria API em `ResponseCodes.cs` (0 a 99), sequenciais: `SUCESSO = 0`, `ERRO = 1` e, a partir de 2, tuplas `(Code, DefaultMessage)`. Erros de negócio não se repetem aqui: o envelope devolve o código do `BusinessErrors` que o Service lançou. Código novo recebe o próximo número livre do seu catálogo.
+- Status HTTP: 200, 201, 400, 401, 403, 404, 409 e 500. Para `BusinessRuleException`, o `GlobalExceptionHandler` usa o `Status` do erro do catálogo; o `responseCode` diz qual regra. 401 e 403 vêm da autenticação. Exclusões respondem 200 com o envelope; a API não usa 204.
 
 ### Segurança
 
