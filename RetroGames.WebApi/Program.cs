@@ -1,4 +1,5 @@
 using RetroGames.WebApi.Configuration;
+using RetroGames.WebApi.Middlewares;
 
 // Carregar o arquivo .env.
 DotNetEnv.Env.TraversePath().Load();
@@ -21,8 +22,13 @@ builder.Services.AddServicosDeNegocio();
 // Registrar Controllers e OpenAPI.
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+// Registrar o tratamento global de exceções.
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 var app = builder.Build();
+// Tratar exceções antes das demais etapas.
+app.UseExceptionHandler();
 
 // Disponibilizar o Swagger somente em desenvolvimento.
 if (app.Environment.IsDevelopment())
