@@ -24,6 +24,10 @@ if (string.IsNullOrWhiteSpace(stringConexao))
 builder.Services.AddRepositorios(stringConexao);
 builder.Services.AddServicosDeNegocio();
 
+// Configurar autenticação por cookie e autorização.
+builder.Services.AddAutenticacao();
+builder.Services.AddAuthorization();
+
 // Registrar os validators do projeto da API.
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
@@ -82,6 +86,11 @@ if (app.Environment.IsDevelopment())
         options.RoutePrefix = "swagger";
     });
 }
+// Identificar o usuário pela sessão.
+app.UseAuthentication();
+
+// Verificar as permissões do usuário.
+app.UseAuthorization();
 
 // Mapear as rotas dos Controllers.
 app.MapControllers();
