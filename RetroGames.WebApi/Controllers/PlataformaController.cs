@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using RetroGames.Services;
 using RetroGames.WebApi.ApiModels;
 using RetroGames.WebApi.Mappers;
+using Microsoft.AspNetCore.Authorization;
+using RetroGames.WebApi.Configuration;
 
 namespace RetroGames.WebApi.Controllers;
 
@@ -48,6 +50,7 @@ public class PlataformaController : ControllerBase
     }
       // POST /api/Plataforma
     [HttpPost]
+    [Authorize(Policy = Politicas.Administrador)]
     public async Task<ActionResult<RetroGamesResponseApiModel<ListarPlataformaResponseApiModel>>> Inserir(
         [FromBody] InserirPlataformaRequestApiModel requisicao)
     {
@@ -67,6 +70,7 @@ public class PlataformaController : ControllerBase
     }  
         // PUT /api/Plataforma/{id}
     [HttpPut("{id:int}")]
+    [Authorize(Policy = Politicas.Administrador)]
     public async Task<ActionResult<RetroGamesResponseApiModel>> Alterar(
         int id,
         [FromBody] AlterarPlataformaRequestApiModel requisicao)
@@ -82,6 +86,7 @@ public class PlataformaController : ControllerBase
     }
         // DELETE /api/Plataforma/{id}
     [HttpDelete("{id:int}")]
+    [Authorize(Policy = Politicas.Administrador)]
     public async Task<ActionResult<RetroGamesResponseApiModel>> Excluir(
         int id)
     {

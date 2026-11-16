@@ -26,7 +26,7 @@ builder.Services.AddServicosDeNegocio();
 
 // Configurar autenticação por cookie e autorização.
 builder.Services.AddAutenticacao();
-builder.Services.AddAuthorization();
+builder.Services.AddAutorizacao();
 
 // Registrar os validators do projeto da API.
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();

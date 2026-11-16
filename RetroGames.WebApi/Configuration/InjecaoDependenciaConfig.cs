@@ -2,6 +2,7 @@ using RetroGames.Repository;
 using RetroGames.Services;
 using Microsoft.AspNetCore.Identity;
 using RetroGames.Model.Model;
+using RetroGames.WebApi.Services;
 
 namespace RetroGames.WebApi.Configuration;
 
@@ -37,6 +38,10 @@ public static class InjecaoDependenciaConfig
         services.AddScoped<ICondicaoJogoService, CondicaoJogoService>();
         services.AddScoped<IAutenticacaoService, AutenticacaoService>();
         services.AddScoped<IPasswordHasher<Usuario>, PasswordHasher<Usuario>>();
+        // Permitir acesso às informações da requisição HTTP.
+        services.AddHttpContextAccessor();
+        // Disponibilizar o usuário atual para os Services.
+        services.AddScoped<IUsuarioAtualService, UsuarioAtualService>();
         return services;
     }
 }
