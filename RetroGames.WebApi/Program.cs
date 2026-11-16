@@ -4,6 +4,8 @@ using RetroGames.WebApi.ActionFilters;
 using RetroGames.WebApi.ApiModels;
 using RetroGames.WebApi.Configuration;
 using RetroGames.WebApi.Middlewares;
+using RetroGames.Services;
+
 // Carregar o arquivo .env.
 DotNetEnv.Env.TraversePath().Load();
 
@@ -52,6 +54,20 @@ builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
 var app = builder.Build();
+
+using (var escopo = app.Services.CreateScope())
+{
+    var autenticacao = escopo.ServiceProvider
+        .GetRequiredService<IAutenticacaoService>();
+
+    var email = app.Configuration["AdminInicial:Email"];
+    var senha = app.Configuration["AdminInicial:Senha"];
+
+    await autenticacao.GarantirAdministradorInicialAsync(
+        email ?? string.Empty,
+        senha ?? string.Empty);
+}
+
 // Tratar exceções antes das demais etapas.
 app.UseExceptionHandler();
 
