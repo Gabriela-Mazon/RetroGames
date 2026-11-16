@@ -1,5 +1,6 @@
 using RetroGames.Model.Model;
 using RetroGames.Repository;
+using System.Transactions;
 
 namespace RetroGames.Services;
 
@@ -164,11 +165,27 @@ public class JogoService : IJogoService
     }
 
     // Cadastrar o jogo e recuperar o ID gerado.
-    jogo.Id = await _repositorio.Jogo.InserirAsync(jogo);
+       var transactionOptions = new TransactionOptions
+    {
+        IsolationLevel = IsolationLevel.ReadCommitted,
+        Timeout = TransactionManager.DefaultTimeout,
+    };
 
-    // Associar o jogo aos gêneros informados.
-    await _repositorio.JogoGenero.InserirAsync(
-        jogo.Id, idsInformados);
+    using (var transactionScope = new TransactionScope(
+        TransactionScopeOption.Required,
+        transactionOptions,
+        TransactionScopeAsyncFlowOption.Enabled))
+    {
+        // Cadastrar o jogo e recuperar o ID gerado.
+        jogo.Id = await _repositorio.Jogo.InserirAsync(jogo);
+
+        // Associar o jogo aos gêneros informados.
+        await _repositorio.JogoGenero.InserirAsync(
+            jogo.Id, idsInformados);
+
+        // Informar que todas as gravações terminaram com sucesso.
+        transactionScope.Complete();
+    }
 
     return jogo;
 }
@@ -223,14 +240,30 @@ public class JogoService : IJogoService
     }
 
     // Atualizar os dados do jogo.
-    await _repositorio.Jogo.AlterarAsync(jogo);
+       var transactionOptions = new TransactionOptions
+    {
+        IsolationLevel = IsolationLevel.ReadCommitted,
+        Timeout = TransactionManager.DefaultTimeout,
+    };
 
-    // Remover os vínculos antigos.
-    await _repositorio.JogoGenero.RemoverPorJogoAsync(jogo.Id);
+    using (var transactionScope = new TransactionScope(
+        TransactionScopeOption.Required,
+        transactionOptions,
+        TransactionScopeAsyncFlowOption.Enabled))
+    {
+        // Atualizar os dados do jogo.
+        await _repositorio.Jogo.AlterarAsync(jogo);
 
-    // Cadastrar os novos vínculos.
-    await _repositorio.JogoGenero.InserirAsync(
-        jogo.Id, idsInformados);
+        // Remover os vínculos antigos.
+        await _repositorio.JogoGenero.RemoverPorJogoAsync(jogo.Id);
+
+        // Cadastrar os novos vínculos.
+        await _repositorio.JogoGenero.InserirAsync(
+            jogo.Id, idsInformados);
+
+        // Informar que todas as gravações terminaram com sucesso.
+        transactionScope.Complete();
+    }
 }
 
     public async Task DesativarAsync(int id)
