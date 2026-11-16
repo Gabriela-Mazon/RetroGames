@@ -1,6 +1,9 @@
+using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
+using RetroGames.WebApi.ActionFilters;
+using RetroGames.WebApi.ApiModels;
 using RetroGames.WebApi.Configuration;
 using RetroGames.WebApi.Middlewares;
-
 // Carregar o arquivo .env.
 DotNetEnv.Env.TraversePath().Load();
 
@@ -19,8 +22,30 @@ if (string.IsNullOrWhiteSpace(stringConexao))
 builder.Services.AddRepositorios(stringConexao);
 builder.Services.AddServicosDeNegocio();
 
-// Registrar Controllers e OpenAPI.
-builder.Services.AddControllers();
+// Registrar os validators do projeto da API.
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+
+// Registrar os Controllers e o filtro de validação.
+builder.Services
+    .AddControllers(opcoes =>
+    {
+        opcoes.Filters.Add<FluentValidationFilter>();
+    })
+    .ConfigureApiBehaviorOptions(opcoes =>
+    {
+        // Padronizar erros de leitura e conversão dos dados recebidos.
+        opcoes.InvalidModelStateResponseFactory = contexto =>
+            new BadRequestObjectResult(
+                new RetroGamesResponseApiModel
+                {
+                    ResponseCode =
+                        ResponseCodes.MODEL_STATE_INVALIDO.Code,
+                    ErrorMessage =
+                        ResponseCodes.MODEL_STATE_INVALIDO.DefaultMessage
+                });
+    });
+
+// Manter a documentação da API.
 builder.Services.AddOpenApi();
 // Registrar o tratamento global de exceções.
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
