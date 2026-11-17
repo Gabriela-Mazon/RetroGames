@@ -32,7 +32,7 @@ public class JogoController : ControllerBase
             idGenero: filtro.IdGenero,
             pagina: filtro.Pagina,
             tamanhoPagina: filtro.TamanhoPagina,
-            incluirInativos: false
+            incluirInativos: filtro.IncluirInativos
         );
 
         var pagina = new PaginaResponseApiModel<ListarJogoResponseApiModel>

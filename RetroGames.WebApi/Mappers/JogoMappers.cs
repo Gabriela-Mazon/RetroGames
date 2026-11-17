@@ -7,23 +7,25 @@ namespace RetroGames.WebApi.Mappers;
 
 public static class JogoMapper
 {
-    // Converter os filtros recebidos pela API.
-    public static (
-        string? Busca,
-        int? IdPlataforma,
-        int? IdGenero,
-        int Pagina,
-        int TamanhoPagina
-    ) ParaFiltro(this ListarJogoRequestApiModel request)
-    {
-        return (
-            request.Busca,
-            request.IdPlataforma,
-            request.IdGenero,
-            request.Pagina,
-            request.TamanhoPagina
-        );
-    }
+  // Converter os filtros recebidos pela API.
+public static (
+    string? Busca,
+    int? IdPlataforma,
+    int? IdGenero,
+    int Pagina,
+    int TamanhoPagina,
+    bool IncluirInativos
+) ParaFiltro(this ListarJogoRequestApiModel request)
+{
+    return (
+        request.Busca,
+        request.IdPlataforma,
+        request.IdGenero,
+        request.Pagina,
+        request.TamanhoPagina,
+        request.IncluirInativos
+    );
+}
 
     // Converter um jogo para a listagem do catálogo.
     public static ListarJogoResponseApiModel ParaListagemResponse(
