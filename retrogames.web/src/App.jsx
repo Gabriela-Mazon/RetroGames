@@ -1,8 +1,20 @@
+
+import { Routes, Route } from 'react-router-dom'
+
+import Layout from './components/Layout'
+import Catalogo from './pages/Catalogo/Catalogo'
+import DetalheJogo from './pages/Catalogo/DetalheJogo'
+import NaoEncontrada from './pages/NaoEncontrada'
+
 function App() {
   return (
-    <main className="container py-5">
-      <h1>RetroGames</h1>
-    </main>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<Catalogo />} />
+        <Route path="jogos/:id" element={<DetalheJogo />} />
+        <Route path="*" element={<NaoEncontrada />} />
+      </Route>
+    </Routes>
   )
 }
 
