@@ -7,6 +7,7 @@ import DetalheJogo from './pages/Catalogo/DetalheJogo'
 import NaoEncontrada from './pages/NaoEncontrada'
 import Login from './pages/Login/Login'
 import RotaProtegida from './components/RotaProtegida'
+import Plataforma from './pages/Auxiliares/Plataforma'
 
 function App() {
   return (
@@ -28,10 +29,10 @@ function App() {
     path="jogos/:id/editar"
     element={<h1>Editar jogo</h1>}
   />
-  <Route
-    path="plataformas"
-    element={<h1>Administração de plataformas</h1>}
-  />
+ <Route
+  path="plataformas"
+  element={<Plataforma />}
+/>
 </Route>
         <Route path="*" element={<NaoEncontrada />} />
       </Route>
