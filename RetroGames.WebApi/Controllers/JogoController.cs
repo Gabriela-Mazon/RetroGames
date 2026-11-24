@@ -21,6 +21,7 @@ public class JogoController : ControllerBase
 
     // GET /api/Jogo
     [HttpGet]
+    [AllowAnonymous]
     public async Task<ActionResult<RetroGamesResponseApiModel<PaginaResponseApiModel<ListarJogoResponseApiModel>>>> Listar(
         [FromQuery] ListarJogoRequestApiModel request)
     {
@@ -58,6 +59,7 @@ public class JogoController : ControllerBase
 
     // GET /api/Jogo/{id}
     [HttpGet("{id:int}")]
+    [AllowAnonymous]
     public async Task<ActionResult<RetroGamesResponseApiModel<ListarPorIdJogoResponseApiModel>>> ListarPorId(
         int id)
     {

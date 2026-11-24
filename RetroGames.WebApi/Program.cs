@@ -78,7 +78,7 @@ app.UseExceptionHandler();
 // Disponibilizar o Swagger somente em desenvolvimento.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.MapOpenApi().AllowAnonymous();
 
     app.UseSwaggerUI(options =>
     {

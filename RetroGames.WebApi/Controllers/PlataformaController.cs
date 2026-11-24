@@ -21,6 +21,7 @@ public class PlataformaController : ControllerBase
 
     // GET /api/Plataforma
     [HttpGet]
+    [AllowAnonymous]
     public async Task<ActionResult<RetroGamesResponseApiModel<List<ListarPlataformaResponseApiModel>>>> Listar()
     {
         var plataformas = await _plataformaService.ListarAsync();
@@ -38,6 +39,7 @@ public class PlataformaController : ControllerBase
 
     // GET /api/Plataforma/{id}
     [HttpGet("{id:int}")]
+    [AllowAnonymous]
     public async Task<ActionResult<RetroGamesResponseApiModel<ListarPlataformaResponseApiModel>>> ListarPorId(int id)
     {
         var plataforma = await _plataformaService.BuscarPorIdAsync(id);

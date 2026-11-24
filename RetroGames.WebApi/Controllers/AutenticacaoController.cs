@@ -24,6 +24,7 @@ public class AutenticacaoController : ControllerBase
 
     // POST /api/Autenticacao/login
     [HttpPost("login")]
+    [AllowAnonymous]
     public async Task<ActionResult<RetroGamesResponseApiModel<UsuarioLogadoResponseApiModel>>> Login(
         [FromBody] LoginRequestApiModel requisicao)
     {
