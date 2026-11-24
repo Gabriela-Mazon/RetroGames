@@ -10,3 +10,22 @@ export function obterMensagemErro(erro) {
     'Não foi possível concluir a operação.'
   )
 }
+
+export function obterErrosDosCampos(erro) {
+  const resposta = erro.response?.data
+
+  // Apenas erros de validação possuem código 3.
+  if (resposta?.responseCode !== 3 || !resposta.data) {
+    return {}
+  }
+
+  // Transformar as mensagens em um objeto por campo.
+  return Object.fromEntries(
+    Object.entries(resposta.data).map(([campo, mensagens]) => [
+      campo,
+      Array.isArray(mensagens)
+        ? mensagens.join(' ')
+        : String(mensagens),
+    ]),
+  )
+}
