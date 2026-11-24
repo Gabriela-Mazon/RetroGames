@@ -8,6 +8,8 @@ import NaoEncontrada from './pages/NaoEncontrada'
 import Login from './pages/Login/Login'
 import RotaProtegida from './components/RotaProtegida'
 import Plataforma from './pages/Auxiliares/Plataforma'
+import Jogos from './pages/Administracao/Jogos'
+import FormularioJogo from './pages/Administracao/FormularioJogo'
 
 function App() {
   return (
@@ -17,17 +19,17 @@ function App() {
         <Route path="jogos/:id" element={<DetalheJogo />} />
         <Route path="login" element={<Login />} />
         <Route path="admin" element={<RotaProtegida somenteAdministrador />}>
-  <Route
-    path="jogos"
-    element={<h1>Administração de jogos</h1>}
-  />
+ <Route
+  path="jogos"
+  element={<Jogos />}
+/>
   <Route
     path="jogos/novo"
-    element={<h1>Novo jogo</h1>}
+    element={<FormularioJogo />}
   />
   <Route
     path="jogos/:id/editar"
-    element={<h1>Editar jogo</h1>}
+    element={<FormularioJogo />}
   />
  <Route
   path="plataformas"
