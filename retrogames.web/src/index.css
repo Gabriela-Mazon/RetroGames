@@ -35,6 +35,10 @@
   --bs-body-font-family: var(--rg-font-sans);
 }
 
+html {
+  scrollbar-gutter: stable;
+}
+
 html,
 body {
   overflow-x: clip;
@@ -42,6 +46,11 @@ body {
   color: var(--rg-ink);
   font-family: var(--rg-font-sans);
   line-height: 1.55;
+}
+
+.rg-atualizando {
+  opacity: 0.65;
+  transition: opacity 0.15s ease;
 }
 
 h1,

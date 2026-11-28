@@ -34,7 +34,8 @@ function Catalogo() {
   const idGenero = parametros.get('idGenero') || ''
   const temFiltrosAtivos = Boolean(busca || idPlataforma || idGenero)
 
-  const carregando = resultado?.chave !== chaveConsulta
+  const atualizando = resultado?.chave !== chaveConsulta
+  const carregandoInicial = !resultado || (!resultado.dados && atualizando)
 
   // Carregar as opções de filtros ao abrir o catálogo.
   useEffect(() => {
@@ -156,8 +157,8 @@ function Catalogo() {
     setParametros(novos)
   }
 
-  const dados = carregando ? null : resultado.dados
-  const erroJogos = carregando ? '' : resultado.erro
+  const dados = resultado?.dados ?? null
+  const erroJogos = !atualizando ? (resultado?.erro || '') : ''
 
   return (
     <section>
@@ -250,21 +251,10 @@ function Catalogo() {
           </select>
         </div>
 
-        <div className="col-12 col-md-2 d-flex align-items-end gap-2">
-          <button type="submit" className="btn btn-primary flex-grow-1">
+        <div className="col-12 col-md-2 d-flex align-items-end">
+          <button type="submit" className="btn btn-primary w-100">
             Buscar
           </button>
-          {temFiltrosAtivos && (
-            <button
-              type="button"
-              className="btn btn-outline-secondary"
-              onClick={limparFiltros}
-              aria-label="Limpar filtros"
-              title="Limpar filtros"
-            >
-              Limpar
-            </button>
-          )}
         </div>
       </form>
 
@@ -272,41 +262,62 @@ function Catalogo() {
         <MensagemErro mensagem={erroFiltros} />
       )}
 
-      {carregando ? (
+      {carregandoInicial ? (
         <Carregando texto="Carregando jogos..." />
       ) : erroJogos ? (
         <MensagemErro
           mensagem={erroJogos}
           aoTentarNovamente={() => setTentativa((valor) => valor + 1)}
         />
-      ) : dados.itens.length === 0 ? (
-        <EstadoVazio titulo="Nenhum jogo encontrado">
-          <p className="mb-3">Tente alterar a pesquisa ou limpar os filtros selecionados.</p>
-          {temFiltrosAtivos && (
-            <button type="button" className="btn btn-outline-primary" onClick={limparFiltros}>
-              Limpar filtros
-            </button>
-          )}
-        </EstadoVazio>
       ) : (
         <>
-          <p className="text-muted fw-medium mb-3">
-            {dados.totalItens} jogo(s) encontrado(s).
-          </p>
+          <div className="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3" style={{ minHeight: 36 }}>
+            <p className="text-muted fw-medium mb-0">
+              {dados.totalItens} jogo(s) encontrado(s).
+              {atualizando && (
+                <span className="ms-2 small text-info" role="status">
+                  Atualizando…
+                </span>
+              )}
+            </p>
 
-          <div className="row g-4">
-            {dados.itens.map((jogo) => (
-              <div key={jogo.id} className="col-12 col-md-6 col-lg-4">
-                <CardJogo jogo={jogo} />
-              </div>
-            ))}
+            {temFiltrosAtivos && (
+              <button
+                type="button"
+                className="btn btn-sm btn-outline-secondary"
+                onClick={limparFiltros}
+              >
+                Limpar filtros
+              </button>
+            )}
           </div>
 
-          <Paginacao
-            pagina={dados.pagina}
-            totalPaginas={dados.totalPaginas}
-            aoMudar={mudarPagina}
-          />
+          {dados.itens.length === 0 ? (
+            <EstadoVazio titulo="Nenhum jogo encontrado">
+              <p className="mb-3">Tente alterar a pesquisa ou limpar os filtros selecionados.</p>
+              {temFiltrosAtivos && (
+                <button type="button" className="btn btn-outline-primary" onClick={limparFiltros}>
+                  Limpar filtros
+                </button>
+              )}
+            </EstadoVazio>
+          ) : (
+            <div className={atualizando ? 'rg-atualizando' : ''} aria-busy={atualizando}>
+              <div className="row g-4">
+                {dados.itens.map((jogo) => (
+                  <div key={jogo.id} className="col-12 col-md-6 col-lg-4">
+                    <CardJogo jogo={jogo} />
+                  </div>
+                ))}
+              </div>
+
+              <Paginacao
+                pagina={dados.pagina}
+                totalPaginas={dados.totalPaginas}
+                aoMudar={mudarPagina}
+              />
+            </div>
+          )}
         </>
       )}
     </section>

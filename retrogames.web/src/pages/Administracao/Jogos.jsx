@@ -24,7 +24,8 @@ function Jogos() {
 const [erroDesativacao, setErroDesativacao] = useState('')
 
   const chaveConsulta = `${busca}|${pagina}|${tentativa}`
-  const carregando = resultado?.chave !== chaveConsulta
+  const atualizando = resultado?.chave !== chaveConsulta
+  const carregandoInicial = !resultado || (!resultado.dados && atualizando)
 
   // Consultar os jogos, incluindo os inativos.
   useEffect(() => {
@@ -97,8 +98,8 @@ const [erroDesativacao, setErroDesativacao] = useState('')
     }
   }
 
-  const dados = carregando ? null : resultado.dados
-  const erro = carregando ? '' : resultado.erro
+  const dados = resultado?.dados ?? null
+  const erro = !atualizando ? (resultado?.erro || '') : ''
 
   return (
     <section>
@@ -141,7 +142,7 @@ const [erroDesativacao, setErroDesativacao] = useState('')
 {erroDesativacao && (
   <MensagemErro mensagem={erroDesativacao} />
 )}
-      {carregando ? (
+      {carregandoInicial ? (
         <Carregando texto="Carregando jogos..." />
       ) : erro ? (
         <MensagemErro
@@ -155,9 +156,14 @@ const [erroDesativacao, setErroDesativacao] = useState('')
           Tente alterar a pesquisa.
         </EstadoVazio>
       ) : (
-        <>
+        <div className={atualizando ? 'rg-atualizando' : ''} aria-busy={atualizando}>
           <p className="text-muted">
             {dados.totalItens} jogo(s) encontrado(s).
+            {atualizando && (
+              <span className="ms-2 small text-info" role="status">
+                Atualizando…
+              </span>
+            )}
           </p>
 
           <div className="table-responsive">
@@ -231,7 +237,7 @@ const [erroDesativacao, setErroDesativacao] = useState('')
             totalPaginas={dados.totalPaginas}
             aoMudar={setPagina}
           />
-        </>
+        </div>
       )}
     </section>
   )
