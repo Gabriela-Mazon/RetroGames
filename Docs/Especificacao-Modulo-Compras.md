@@ -14,7 +14,7 @@ Este documento complementa a especificação base [`Especificacao-Arquitetura-e-
 | **C04** | Finalização da compra | Criação do pedido autenticado em `TransactionScope`, validando jogos ativos e estoque com `FOR UPDATE`, usando preço do banco, calculando o total no `Service`, gravando pedido (`Pendente`), itens e baixando estoque na mesma transação. |
 | **C05** | Meus pedidos | Listagem exclusiva dos pedidos do cliente logado, ordenados do mais recente para o mais antigo, exibindo situação, data/hora formatada, total e itens com quantidade e preço pago na compra. |
 
-> **Observação sobre identidade visual:** A estilização customizada (paleta própria, tipografia, logotipo e imagens) foi mantida **pendente** por decisão da dupla, utilizando o **Bootstrap 5 padrão** com melhorias funcionais de responsividade, usabilidade e acessibilidade.
+> **Identidade visual aplicada (Arcade Neon Dark):** Tema escuro em roxo noturno (`#0F0A1F` fundo, `#1A1333` cartões, `#7C3AED` / `#8B5CF6` primária, `#22D3EE` foco/badge/destaques, `#EC4899` detalhe arcade, `#F8FAFC` texto principal), tipografia `Chakra Petch` + `Inter` (Google Fonts, licença SIL OFL), logotipo SVG de joystick arcade, `favicon.svg` próprio e banner ilustrativo `hero-arcade.png` sobre Bootstrap 5.3 (`data-bs-theme="dark"`).
 
 ---
 
@@ -134,23 +134,27 @@ Além das 7 tabelas do módulo de Catálogo e Administração (`tb_condicao_jogo
 
 ### 7.1 Novos arquivos e atualizações no front-end (`retrogames.web/src/`)
 
+- `index.html` e `public/favicon.svg`: `lang="pt-BR"`, `data-bs-theme="dark"`, fontes `Chakra Petch` e `Inter` (SIL OFL) e favicon SVG próprio de joystick arcade.
+- `index.css` e `main.jsx`: sistema visual **Arcade Neon Dark** sobre Bootstrap 5.3 (`#0F0A1F`, `#1A1333`, `#241B47`, `#7C3AED`, `#8B5CF6`, `#22D3EE`, `#EC4899`, `#F8FAFC`), contorno `:focus-visible` ciano de `3 px`, alvos de toque mínimos de `44 px` e contraste ajustado em cartões, formulários, alertas e tabelas administrativas.
+- `assets/hero-arcade.png`: banner ilustrativo temático exibido no topo do catálogo com degradê de leitura em alta legibilidade.
 - `lib/formato.js`: adicionada `formatarDataHora` para datas em `pt-BR`.
 - `api/servicos.js`: adicionados `autenticacaoApi.cadastrar`, `pedidoApi.finalizar` e `pedidoApi.meus`.
 - `contexts/CarrinhoProvider.jsx` e `hooks/useCarrinho.js`: estado global do carrinho por usuário/visitante persistido no `localStorage`.
-- `components/Layout.jsx`: menu responsivo com `Catálogo`, `Carrinho` (com contador), `Meus pedidos` para clientes autenticados, `Administração` apenas para administradores, `Criar conta` / `Entrar` para visitantes e recolhimento automático ao trocar de rota no celular.
+- `components/Layout.jsx`: menu responsivo com logotipo SVG próprio (`IconeJoystick`), `Catálogo`, `Carrinho` (com contador em destaque ciano), `Meus pedidos` para clientes autenticados, `Administração` apenas para administradores, `Criar conta` / `Entrar` para visitantes e recolhimento automático ao trocar de rota no celular.
+- `components/MensagensEstado.jsx` e `components/CardJogo.jsx`: estados `Carregando`, `MensagemErro` e `EstadoVazio` estilizados; cartões de jogo com pílula de plataforma, chips de gênero, badges `Em estoque` / `Esgotado` e preço em destaque.
 - `components/RotaProtegida.jsx`: redireciona visitantes para `/login?voltarPara=...` e exibe estado de carregamento consistente.
-- `pages/Login/Cadastro.jsx`: cadastro de cliente com validação por campo (`is-invalid` + `invalid-feedback`) e retorno automático à rota de origem.
-- `pages/Catalogo/Catalogo.jsx`: adicionado botão `Limpar` para resetar busca e filtros ativos.
-- `pages/Catalogo/DetalheJogo.jsx`: botão `Adicionar ao carrinho` (desabilitado se esgotado/inativo ou no limite de 10 unidades) e feedback imediato com link para `/carrinho`.
-- `pages/Compras/Carrinho.jsx`: ajuste de quantidades (1 a 10), remoção de item, resumo da compra, finalização e recibo com link para `/meus-pedidos`.
-- `pages/Compras/MeusPedidos.jsx`: listagem de pedidos do cliente com situação em badge contextual, data formatada, itens com preço unitário pago e total.
+- `pages/Login/Cadastro.jsx` e `Login.jsx`: cartões de autenticação com validação por campo (`is-invalid` + `invalid-feedback`) e retorno automático à rota de origem.
+- `pages/Catalogo/Catalogo.jsx`: banner hero `.rg-hero`, cartão de filtros `.rg-filter-card` e botão `Limpar` para resetar busca e filtros ativos.
+- `pages/Catalogo/DetalheJogo.jsx`: layout em duas colunas (detalhes + resumo lateral), botão `Adicionar ao carrinho` (desabilitado se esgotado/inativo ou no limite de 10 unidades) e feedback imediato com link para `/carrinho`.
+- `pages/Compras/Carrinho.jsx`: ajuste de quantidades (1 a 10), remoção de item, resumo da compra, finalização e recibo `.rg-receipt-card` com link para `/meus-pedidos`.
+- `pages/Compras/MeusPedidos.jsx`: listagem de pedidos do cliente com situação em badge contextual (`Pendente`, `Pago`, `Enviado`, `Cancelado`), data formatada, itens com preço unitário pago e subtotal.
 
 ### 7.2 Responsividade e acessibilidade
 
 - Grid responsivo do Bootstrap 5 (`container`, `row`, `col-12 col-md-6 col-lg-4`) em listagens, formulários e carrinho.
 - Menu recolhível em telas estreitas com botão hambúrguer (`navbar-toggler`) e tabelas administrativas encapsuladas em `table-responsive`.
-- Testado no navegador em **1366×768** (desktop) e **360×800** (celular) com **0 px de overflow horizontal**.
-- **Pendência registrada:** identidade visual própria (paleta de cores, tipografia, logotipo e imagens) ainda não definida pela dupla.
+- Contorno visível em `:focus-visible` (`3px solid #22D3EE`), alvos de toque confortáveis (`min-height: 44px` em botões, inputs e links de paginação) e contraste WCAG AA+ em todas as telas públicas, de compras e administrativas.
+- Testado no navegador em **1366×768** (desktop) e **360×800** (celular) com **0 erros de console** e **0 px de overflow horizontal**.
 
 ### 7.3 Exemplos das 10 heurísticas de Nielsen no RetroGames
 
