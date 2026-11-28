@@ -39,6 +39,11 @@ export const jogoApi = {
 
 
 export const pedidoApi = {
+  async meus() {
+    const resposta = await api.get('/Pedido/meus')
+    return resposta.data.data
+  },
+
   async finalizar(itens) {
     const resposta = await api.post('/Pedido', {
       itens: itens.map(({ idJogo, quantidade }) => ({ idJogo, quantidade })),

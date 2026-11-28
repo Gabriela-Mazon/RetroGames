@@ -16,4 +16,5 @@ public interface IRepositorySet
 
     IPedidoRepository Pedido { get; }
     IItemPedidoRepository ItemPedido { get; }
+    ISituacaoPedidoRepository SituacaoPedido { get; }
 }

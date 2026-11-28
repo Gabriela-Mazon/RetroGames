@@ -4,7 +4,7 @@ import { obterMensagemErro } from '../../api/erros'
 import { Link } from 'react-router-dom'
 import { EstadoVazio } from '../../components/MensagensEstado'
 import { useCarrinho } from '../../hooks/useCarrinho'
-import { formatarPreco } from '../../lib/formato'
+import { formatarDataHora, formatarPreco } from '../../lib/formato'
 
 const quantidades = Array.from({ length: 10 }, (_, indice) => indice + 1)
 
@@ -38,9 +38,12 @@ export default function Carrinho() {
   if (recibo) return (
     <section className="card p-4 mx-auto recibo" role="status">
       <h1>Compra registrada</h1>
-      <p>Pedido #{recibo.id} · Pendente</p>
+      <p>Pedido #{recibo.id} · Pendente{recibo.data ? ` · ${formatarDataHora(recibo.data)}` : ''}</p>
       <p>Total do pedido <strong>{formatarPreco(recibo.total)}</strong></p>
-      <Link className="btn btn-primary align-self-start" to="/">Voltar ao catálogo</Link>
+      <div className="d-flex gap-2 flex-wrap">
+        <Link className="btn btn-primary" to="/meus-pedidos">Ver meus pedidos</Link>
+        <Link className="btn btn-outline-secondary" to="/">Voltar ao catálogo</Link>
+      </div>
     </section>
   )
 

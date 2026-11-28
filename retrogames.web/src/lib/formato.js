@@ -5,3 +5,12 @@ export function formatarPreco(valor) {
     currency: 'BRL',
   }).format(valor)
 }
+
+// Formatar data e hora no padrão brasileiro.
+export function formatarDataHora(valor) {
+  if (!valor) return ''
+  return new Intl.DateTimeFormat('pt-BR', {
+    dateStyle: 'short',
+    timeStyle: 'short',
+  }).format(new Date(valor))
+}

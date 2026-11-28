@@ -6,6 +6,7 @@ import Catalogo from './pages/Catalogo/Catalogo'
 import DetalheJogo from './pages/Catalogo/DetalheJogo'
 import NaoEncontrada from './pages/NaoEncontrada'
 import Login from './pages/Login/Login'
+import MeusPedidos from './pages/Compras/MeusPedidos'
 import Carrinho from './pages/Compras/Carrinho'
 import Cadastro from './pages/Login/Cadastro'
 import RotaProtegida from './components/RotaProtegida'
@@ -23,6 +24,7 @@ function App() {
         <Route path="cadastro" element={<Cadastro />} />
         <Route element={<RotaProtegida />}>
           <Route path="carrinho" element={<Carrinho />} />
+          <Route path="meus-pedidos" element={<MeusPedidos />} />
         </Route>
         <Route path="admin" element={<RotaProtegida somenteAdministrador />}>
  <Route

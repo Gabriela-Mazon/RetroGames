@@ -7,6 +7,25 @@ namespace RetroGames.Services;
 
 public class PedidoService(IRepositorySet repositorio) : IPedidoService
 {
+    public async Task<List<PedidoResumoServiceModel>> ListarMeusAsync(int idUsuario)
+    {
+        var pedidos = await repositorio.Pedido.ListarPorUsuarioAsync(idUsuario);
+        if (pedidos.Count == 0) return [];
+
+        var idsPedidos = pedidos.Select(p => p.Id).ToList();
+        var itens = await repositorio.ItemPedido.ListarPorPedidosAsync(idsPedidos);
+        var idsJogos = itens.Select(i => i.IdJogo).Distinct().ToList();
+        // Um jogo desativado continua fazendo parte do histórico de quem o comprou.
+        var (jogos, _) = await repositorio.Jogo.ListarAsync(ids: idsJogos, tamanhoPagina: idsJogos.Count, incluirInativos: true);
+        var nomes = jogos.ToDictionary(j => j.Id, j => j.Nome);
+        var situacoes = (await repositorio.SituacaoPedido.ListarAsync()).ToDictionary(s => s.Id, s => s.Descricao);
+        var itensPorPedido = itens.ToLookup(i => i.IdPedido);
+        return pedidos.Select(p => new PedidoResumoServiceModel(
+            p.Id, p.Data, situacoes[p.IdSituacaoPedido], p.Total, itensPorPedido[p.Id].Select(i =>
+                new ItemPedidoResumoServiceModel(i.IdJogo, nomes[i.IdJogo], i.Quantidade, i.ValorUnitario)).ToList()
+        )).ToList();
+    }
+
     public async Task<Pedido> FinalizarAsync(int idUsuario, IReadOnlyList<ItemCompraServiceModel> carrinho)
     {
         // Pré-condições também protegem chamadas diretas ao Service.
