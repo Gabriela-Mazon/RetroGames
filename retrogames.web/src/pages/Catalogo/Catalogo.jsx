@@ -1,9 +1,10 @@
-
 import { useEffect, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 
+import heroArcade from '../../assets/hero-arcade.png'
 import { jogoApi, plataformaApi, generoApi } from '../../api/servicos'
 import { obterMensagemErro } from '../../api/erros'
+import { useAutenticacao } from '../../hooks/useAutenticacao'
 
 import CardJogo from '../../components/CardJogo'
 import Paginacao from '../../components/Paginacao'
@@ -16,6 +17,7 @@ import {
 
 function Catalogo() {
   const [parametros, setParametros] = useSearchParams()
+  const { estaAutenticado } = useAutenticacao()
 
   const [plataformas, setPlataformas] = useState([])
   const [generos, setGeneros] = useState([])
@@ -159,11 +161,36 @@ function Catalogo() {
 
   return (
     <section>
-      <h1 className="mb-4">Catálogo de jogos</h1>
+      <div
+        className="rg-hero p-4 p-md-5 mb-4"
+        style={{ backgroundImage: `url(${heroArcade})`, backgroundPosition: 'right 68%' }}
+      >
+        <div className="rg-hero-content">
+          <span className="rg-hero-eyebrow">Acervo retrô selecionado</span>
+          <h1 className="display-6 fw-bold mb-2">Catálogo de jogos</h1>
+          <p className="mb-3">
+            Cartuchos e mídias físicas revisadas por plataforma e estado de conservação, com estoque atualizado em tempo real.
+          </p>
+          <div className="d-flex flex-wrap gap-2">
+            <a href="#filtros-catalogo" className="btn rg-btn-accent">
+              Explorar catálogo
+            </a>
+            {!estaAutenticado && (
+              <Link to="/cadastro" className="btn btn-outline-light">
+                Criar conta grátis
+              </Link>
+            )}
+          </div>
+        </div>
+      </div>
 
-      <form className="row g-3 mb-4" onSubmit={pesquisar}>
+      <form
+        id="filtros-catalogo"
+        className="rg-filter-card row g-3 mb-4"
+        onSubmit={pesquisar}
+      >
         <div className="col-12 col-md-4">
-          <label htmlFor="busca" className="form-label">
+          <label htmlFor="busca" className="form-label fw-semibold">
             Pesquisar jogo
           </label>
 
@@ -178,7 +205,7 @@ function Catalogo() {
         </div>
 
         <div className="col-12 col-md-3">
-          <label htmlFor="plataforma" className="form-label">
+          <label htmlFor="plataforma" className="form-label fw-semibold">
             Plataforma
           </label>
 
@@ -201,7 +228,7 @@ function Catalogo() {
         </div>
 
         <div className="col-12 col-md-3">
-          <label htmlFor="genero" className="form-label">
+          <label htmlFor="genero" className="form-label fw-semibold">
             Gênero
           </label>
 
@@ -254,16 +281,16 @@ function Catalogo() {
         />
       ) : dados.itens.length === 0 ? (
         <EstadoVazio titulo="Nenhum jogo encontrado">
-          <p className="mb-2">Tente alterar a pesquisa ou os filtros.</p>
+          <p className="mb-3">Tente alterar a pesquisa ou limpar os filtros selecionados.</p>
           {temFiltrosAtivos && (
-            <button type="button" className="btn btn-outline-secondary" onClick={limparFiltros}>
+            <button type="button" className="btn btn-outline-primary" onClick={limparFiltros}>
               Limpar filtros
             </button>
           )}
         </EstadoVazio>
       ) : (
         <>
-          <p className="text-muted">
+          <p className="text-muted fw-medium mb-3">
             {dados.totalItens} jogo(s) encontrado(s).
           </p>
 

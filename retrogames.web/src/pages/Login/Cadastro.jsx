@@ -42,7 +42,7 @@ export default function Cadastro() {
     <section className="row justify-content-center">
       <div className="col-12 col-md-8 col-lg-5">
         <h1 className="mb-4">Criar conta</h1>
-        <form onSubmit={enviar} className="card shadow-sm">
+        <form onSubmit={enviar} className="card rg-auth-card">
           <div className="card-body p-4">
             {erro && <div className="alert alert-danger" role="alert">{erro}</div>}
             {[

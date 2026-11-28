@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
@@ -59,6 +58,7 @@ function DetalheJogo() {
 
   const jogo = carregando ? null : resultado.jogo
   const erro = carregando ? '' : resultado.erro
+  const indisponivel = jogo ? !jogo.ativo || jogo.estoque < 1 : false
 
   return (
     <section>
@@ -76,72 +76,96 @@ function DetalheJogo() {
           }
         />
       ) : (
-        <div className="card shadow-sm">
-          <div className="card-body p-4">
-            <p className="text-muted mb-2">
-              {jogo.nomePlataforma}
-            </p>
-
-            <h1 className="mb-4">{jogo.nome}</h1>
-
-            <p>
-              <strong>Ano de lançamento:</strong>{' '}
-              {jogo.anoLancamento}
-            </p>
-
-            <p>
-              <strong>Condição:</strong>{' '}
-              {jogo.descricaoCondicao}
-            </p>
-
-            <div className="mb-3">
-              <strong>Gêneros:</strong>
-
-              <div className="mt-2">
-                {jogo.generos.map((genero) => (
-                  <span
-                    key={genero.id}
-                    className="badge bg-secondary me-2 mb-2"
-                  >
-                    {genero.nome}
+        <div className="row g-4">
+          <div className="col-12 col-lg-8">
+            <div className="card shadow-sm h-100">
+              <div className="card-body p-4">
+                <div className="d-flex flex-wrap align-items-center gap-2 mb-3">
+                  <span className="rg-platform-pill">{jogo.nomePlataforma}</span>
+                  <span className="text-muted small fw-semibold">
+                    Lançado em {jogo.anoLancamento}
                   </span>
-                ))}
+                </div>
+
+                <h1 className="mb-3">{jogo.nome}</h1>
+
+                <p className="mb-3">
+                  <strong>Condição:</strong>{' '}
+                  {jogo.descricaoCondicao}
+                </p>
+
+                <div className="mb-4">
+                  <strong>Gêneros:</strong>
+
+                  <div className="d-flex flex-wrap gap-2 mt-2">
+                    {jogo.generos.map((genero) => (
+                      <span
+                        key={genero.id}
+                        className="rg-genre-chip"
+                      >
+                        {genero.nome}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {jogo.descricao?.trim() && (
+                  <div className="border-top pt-3">
+                    <h2 className="h5 mb-2">Descrição</h2>
+                    <p className="mb-0">{jogo.descricao}</p>
+                  </div>
+                )}
               </div>
             </div>
+          </div>
 
-            {jogo.descricao?.trim() && (
-              <div className="mb-4">
-                <h2 className="h5">Descrição</h2>
-                <p>{jogo.descricao}</p>
+          <div className="col-12 col-lg-4">
+            <aside className="card shadow-sm p-4">
+              <p className="text-muted small mb-1">Valor unitário</p>
+              <p className="fs-2 fw-bold mb-2 rg-price">
+                {formatarPreco(jogo.preco)}
+              </p>
+
+              {jogo.estoque > 0 && jogo.ativo ? (
+                <p className="mb-3">
+                  <span className="badge rg-badge-estoque">
+                    Disponível — {jogo.estoque} unidade(s)
+                  </span>
+                </p>
+              ) : (
+                <p className="mb-3">
+                  <span className="badge rg-badge-esgotado">
+                    Esgotado
+                  </span>
+                </p>
+              )}
+
+              <div className="d-grid gap-2">
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  disabled={indisponivel || noCarrinho >= 10}
+                  onClick={() => { adicionar(jogo); setJogoAdicionado(jogo.id) }}
+                >
+                  {indisponivel
+                    ? 'Jogo esgotado'
+                    : noCarrinho >= 10
+                      ? 'Limite de 10 por jogo'
+                      : 'Adicionar ao carrinho'}
+                </button>
+                <Link className="btn btn-outline-secondary" to="/carrinho">
+                  Ver carrinho{noCarrinho > 0 ? ` (${noCarrinho})` : ''}
+                </Link>
               </div>
-            )}
 
-            <hr />
-
-            <p className="fs-3 fw-bold mb-2">
-              {formatarPreco(jogo.preco)}
-            </p>
-
-            {jogo.estoque > 0 ? (
-              <p className="text-success fw-semibold">
-                Disponível — {jogo.estoque} unidade(s)
-              </p>
-            ) : (
-              <p className="text-danger fw-semibold">
-                Esgotado
-              </p>
-            )}
-            <div className="d-flex flex-wrap gap-2">
-              <button type="button" className="btn btn-primary"
-                disabled={!jogo.ativo || jogo.estoque < 1 || noCarrinho >= 10}
-                onClick={() => { adicionar(jogo); setJogoAdicionado(jogo.id) }}>
-                {noCarrinho >= 10 ? 'Limite de 10 por jogo' : 'Adicionar ao carrinho'}
-              </button>
-              <Link className="btn btn-outline-secondary" to="/carrinho">Ver carrinho</Link>
-            </div>
-            <p role="status" className="mt-2 mb-0">
-              {jogoAdicionado === jogo.id && noCarrinho > 0 && `Adicionado ao carrinho · ${noCarrinho} de ${jogo.nome}`}
-            </p>
+              <div role="status" className="mt-3">
+                {jogoAdicionado === jogo.id && noCarrinho > 0 && (
+                  <div className="alert alert-success py-2 px-3 mb-0 small">
+                    Adicionado ao carrinho · {noCarrinho} unidade(s) de {jogo.nome}.
+                  </div>
+                )}
+              </div>
+            </aside>
           </div>
         </div>
       )}

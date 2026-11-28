@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom'
 
 function NaoEncontrada() {
   return (
-    <section className="text-center py-5">
-      <h1 className="display-4">404</h1>
+    <section className="rg-state-box my-4 mx-auto" style={{ maxWidth: 560 }}>
+      <h1 className="display-4 mb-2">404</h1>
 
-      <h2 className="h4 mt-3">Página não encontrada</h2>
+      <h2 className="h4 mt-2">Página não encontrada</h2>
 
-      <p className="text-muted">
+      <p className="text-muted mt-2">
         O endereço que você tentou acessar não existe.
       </p>
 

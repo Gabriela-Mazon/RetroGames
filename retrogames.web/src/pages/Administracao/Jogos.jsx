@@ -113,7 +113,7 @@ const [erroDesativacao, setErroDesativacao] = useState('')
         </Link>
       </div>
 
-      <form className="row g-3 mb-4" onSubmit={pesquisar}>
+      <form className="rg-filter-card row g-3 mb-4" onSubmit={pesquisar}>
         <div className="col-12 col-md-8">
           <label htmlFor="buscaJogo" className="form-label">
             Pesquisar jogo
@@ -187,8 +187,8 @@ const [erroDesativacao, setErroDesativacao] = useState('')
                       <span
                         className={`badge ${
                           jogo.ativo
-                            ? 'bg-success'
-                            : 'bg-secondary'
+                            ? 'rg-badge-estoque'
+                            : 'rg-badge-esgotado'
                         }`}
                       >
                         {jogo.ativo ? 'Ativo' : 'Inativo'}

@@ -34,10 +34,10 @@ function Login() {
 
   return (
     <section className="row justify-content-center">
-      <div className="col-12 col-md-6">
+      <div className="col-12 col-md-8 col-lg-5">
         <h1 className="mb-4">Entrar</h1>
 
-        <form onSubmit={enviar} className="card shadow-sm">
+        <form onSubmit={enviar} className="card rg-auth-card">
           <div className="card-body p-4">
             {erro && (
               <div className="alert alert-danger" role="alert">
