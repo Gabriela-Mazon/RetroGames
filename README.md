@@ -17,11 +17,14 @@ Projeto acadêmico de desenvolvimento web **RetroGames** — loja web de jogos r
 
 ## Configuração do banco e variáveis de ambiente
 
-1. Crie o banco `retrogames` no MySQL e execute os scripts da pasta `database/` em ordem:
+1. Crie o banco no MySQL (por exemplo, `retrogames` em uma instalação local) e execute os scripts da pasta `database/` em ordem:
    - `database/01_criar_tabelas.sql`
    - `database/02_dados_exemplo.sql`
    - `database/04_modulo_compras.sql`
+
+   O script `database/03_consultas_e_testes.sql` é opcional: ele contém as consultas usadas para conferir os dados e não precisa ser executado para a aplicação funcionar.
 2. Copie `.env.example` para `.env` na raiz do repositório e preencha `ConnectionStrings__Default`, `AdminInicial__Email` e `AdminInicial__Senha` (o `.env` está no `.gitignore` e nunca deve ser versionado).
+   - O `.env.example` traz como modelo o servidor MySQL da instituição. Para usar um banco local, troque `server`, `database` e `user` na connection string (por exemplo, `server=localhost;port=3306;database=retrogames;user=root;password=SUA_SENHA`).
 
 ## Execução local
 
@@ -60,3 +63,8 @@ npm run build
 - [Especificação complementar — Módulo de Compras (C01 a C05) e Rastreabilidade](./Docs/Especificacao-Modulo-Compras.md)
 - [Revisão da Sprint e Guia de Apresentação](./Docs/Revisao-Sprint-e-Apresentacao.md)
 - [Diretrizes do repositório](./AGENTS.md)
+
+## Equipe
+
+- Gabriela Mazon ([@Gabriela-Mazon](https://github.com/Gabriela-Mazon))
+- LuthorW ([@LuthorW](https://github.com/LuthorW)) — revisão da documentação

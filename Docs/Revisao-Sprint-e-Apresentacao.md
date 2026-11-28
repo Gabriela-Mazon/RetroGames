@@ -20,8 +20,8 @@
 
 ## 2. Itens em Aberto Pós-Entrega
 
-1. **Contribuição própria em commits da integrante `LuthorW`:**
-   - **Motivo:** Até esta revisão (28/11/2026), todos os commits na branch `main` foram registrados pela conta `Gabriela-Mazon`. Caso a integrante `LuthorW` registre ajustes ou revisões antes da entrega final, seu commit integrará o histórico.
+1. ~~**Contribuição própria em commits da integrante `LuthorW`**~~ — **resolvido em 28/11/2026:**
+   - A integrante `LuthorW` registrou um commit de revisão da documentação (`README.md` e este documento), com o próprio nome no histórico da branch `main`.
 2. **Apresentação do projeto (01/12/2026):**
    - Aguardando a data da apresentação em aula (roteiro na seção 4 abaixo).
 
