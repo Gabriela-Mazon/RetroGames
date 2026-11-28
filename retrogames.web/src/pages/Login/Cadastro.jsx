@@ -12,6 +12,12 @@ export default function Cadastro() {
   const [erro, setErro] = useState('')
   const [campos, setCampos] = useState({})
 
+  function limparErroCampo(nome) {
+    if (campos[nome]) {
+      setCampos(atuais => ({ ...atuais, [nome]: undefined }))
+    }
+  }
+
   async function enviar(evento) {
     evento.preventDefault()
     if (enviando) return
@@ -43,16 +49,36 @@ export default function Cadastro() {
               ['nome', 'Nome', 'text', 'name', 150],
               ['email', 'E-mail', 'email', 'email', 255],
               ['senha', 'Senha', 'password', 'new-password', undefined],
-            ].map(([nome, rotulo, tipo, completar, tamanho]) => (
-              <div className="mb-3" key={nome}>
-                <label htmlFor={nome} className="form-label">{rotulo}</label>
-                <input id={nome} name={nome} type={tipo} className="form-control"
-                  autoComplete={completar} maxLength={tamanho} required
-                  aria-invalid={Boolean(campos[nome])}
-                  aria-describedby={campos[nome] ? nome + '-erro' : undefined} />
-                {campos[nome] && <div id={nome + '-erro'} className="text-danger">{campos[nome]}</div>}
-              </div>
-            ))}
+            ].map(([nome, rotulo, tipo, completar, tamanho]) => {
+              const idsDescricao = [
+                campos[nome] ? `${nome}-erro` : null,
+                nome === 'senha' ? 'senha-ajuda' : null,
+              ].filter(Boolean).join(' ') || undefined
+
+              return (
+                <div className="mb-3" key={nome}>
+                  <label htmlFor={nome} className="form-label">{rotulo}</label>
+                  <input
+                    id={nome}
+                    name={nome}
+                    type={tipo}
+                    className={`form-control ${campos[nome] ? 'is-invalid' : ''}`}
+                    autoComplete={completar}
+                    maxLength={tamanho}
+                    required
+                    aria-invalid={Boolean(campos[nome])}
+                    aria-describedby={idsDescricao}
+                    onChange={() => limparErroCampo(nome)}
+                  />
+                  {nome === 'senha' && (
+                    <div id="senha-ajuda" className="form-text">
+                      Informe uma senha para acessar sua conta e acompanhar seus pedidos.
+                    </div>
+                  )}
+                  {campos[nome] && <div id={nome + '-erro'} className="invalid-feedback">{campos[nome]}</div>}
+                </div>
+              )
+            })}
             <button type="submit" disabled={enviando} className="btn btn-primary w-100">
               {enviando ? 'Criando conta…' : 'Criar conta'}
             </button>

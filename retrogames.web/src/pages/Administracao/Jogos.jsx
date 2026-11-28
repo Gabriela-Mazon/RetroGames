@@ -102,7 +102,7 @@ const [erroDesativacao, setErroDesativacao] = useState('')
 
   return (
     <section>
-      <div className="d-flex justify-content-between align-items-center mb-4">
+      <div className="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
         <h1 className="mb-0">Administração de jogos</h1>
 
         <Link

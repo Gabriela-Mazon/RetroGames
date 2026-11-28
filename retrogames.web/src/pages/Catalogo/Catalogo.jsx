@@ -30,6 +30,7 @@ function Catalogo() {
   const busca = parametros.get('busca') || ''
   const idPlataforma = parametros.get('idPlataforma') || ''
   const idGenero = parametros.get('idGenero') || ''
+  const temFiltrosAtivos = Boolean(busca || idPlataforma || idGenero)
 
   const carregando = resultado?.chave !== chaveConsulta
 
@@ -141,6 +142,10 @@ function Catalogo() {
     alterarFiltro('busca', texto)
   }
 
+  function limparFiltros() {
+    setParametros(new URLSearchParams())
+  }
+
   function mudarPagina(novaPagina) {
     const novos = new URLSearchParams(parametros)
 
@@ -218,10 +223,21 @@ function Catalogo() {
           </select>
         </div>
 
-        <div className="col-12 col-md-2 d-flex align-items-end">
-          <button type="submit" className="btn btn-primary w-100">
+        <div className="col-12 col-md-2 d-flex align-items-end gap-2">
+          <button type="submit" className="btn btn-primary flex-grow-1">
             Buscar
           </button>
+          {temFiltrosAtivos && (
+            <button
+              type="button"
+              className="btn btn-outline-secondary"
+              onClick={limparFiltros}
+              aria-label="Limpar filtros"
+              title="Limpar filtros"
+            >
+              Limpar
+            </button>
+          )}
         </div>
       </form>
 
@@ -238,7 +254,12 @@ function Catalogo() {
         />
       ) : dados.itens.length === 0 ? (
         <EstadoVazio titulo="Nenhum jogo encontrado">
-          Tente alterar a pesquisa ou os filtros.
+          <p className="mb-2">Tente alterar a pesquisa ou os filtros.</p>
+          {temFiltrosAtivos && (
+            <button type="button" className="btn btn-outline-secondary" onClick={limparFiltros}>
+              Limpar filtros
+            </button>
+          )}
         </EstadoVazio>
       ) : (
         <>

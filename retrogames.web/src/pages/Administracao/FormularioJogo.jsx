@@ -420,7 +420,7 @@ function FormularioJogo() {
               </div>
             </div>
 
-            <div className="d-flex gap-2 mt-4">
+            <div className="d-flex flex-wrap gap-2 mt-4">
               <button
                 type="submit"
                 className="btn btn-primary"

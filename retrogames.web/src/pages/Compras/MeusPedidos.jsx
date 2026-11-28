@@ -5,6 +5,19 @@ import { obterMensagemErro } from '../../api/erros'
 import { Carregando, EstadoVazio, MensagemErro } from '../../components/MensagensEstado'
 import { formatarDataHora, formatarPreco } from '../../lib/formato'
 
+function classeSituacao(situacao) {
+  switch ((situacao || '').toLowerCase()) {
+    case 'pago':
+      return 'bg-success'
+    case 'enviado':
+      return 'bg-info text-dark'
+    case 'cancelado':
+      return 'bg-danger'
+    default:
+      return 'bg-warning text-dark'
+  }
+}
+
 export default function MeusPedidos() {
   const [tentativa, setTentativa] = useState(0)
   const [resultado, setResultado] = useState(null)
@@ -34,13 +47,16 @@ export default function MeusPedidos() {
               <div><h2 className="h4">Pedido #{pedido.id}</h2>
                 <time className="text-muted" dateTime={pedido.data}>{formatarDataHora(pedido.data)}</time>
               </div>
-              <span className="badge situacao-pedido bg-secondary">{pedido.situacao}</span>
+              <span className={`badge situacao-pedido ${classeSituacao(pedido.situacao)}`}>{pedido.situacao}</span>
             </header>
             <ul className="list-group list-group-flush my-3">
               {pedido.itens.map(item => (
                 <li key={item.idJogo} className="list-group-item px-0 d-flex justify-content-between gap-3 flex-wrap">
                   <span>{item.nomeJogo}</span>
-                  <span>{item.quantidade} × {formatarPreco(item.valorUnitario)}</span>
+                  <span>
+                    {item.quantidade} × {formatarPreco(item.valorUnitario)}{' '}
+                    <strong className="ms-2">{formatarPreco(item.quantidade * item.valorUnitario)}</strong>
+                  </span>
                 </li>
               ))}
             </ul>
