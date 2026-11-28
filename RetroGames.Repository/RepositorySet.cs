@@ -13,6 +13,8 @@ public class RepositorySet : IRepositorySet
     public ICondicaoJogoRepository CondicaoJogo { get; }
 
     public IUsuarioRepository Usuario { get; }
+    public IPedidoRepository Pedido { get; }
+    public IItemPedidoRepository ItemPedido { get; }
     
     public RepositorySet(RepositoryConfig config)
     {
@@ -27,5 +29,7 @@ public class RepositorySet : IRepositorySet
         CondicaoJogo = new CondicaoJogoRepository(config);
 
         Usuario = new UsuarioRepository(config);
+        Pedido = new PedidoRepository(config);
+        ItemPedido = new ItemPedidoRepository(config);
     }
 }

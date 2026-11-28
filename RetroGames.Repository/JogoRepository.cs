@@ -144,9 +144,11 @@ public class JogoRepository : RepositoryBase, IJogoRepository
         return (jogos, total);
     }
 
-    // Implementaremos estes métodos nos próximos passos.
+    public Task<Jogo?> BuscarPorIdAsync(int id) => LerPorIdAsync(id, bloquear: false);
 
-    public async Task<Jogo?> BuscarPorIdAsync(int id)
+    public Task<Jogo?> BuscarParaCompraAsync(int id) => LerPorIdAsync(id, bloquear: true);
+
+    private async Task<Jogo?> LerPorIdAsync(int id, bool bloquear)
 {
     const string sql = """
         SELECT
@@ -161,11 +163,11 @@ public class JogoRepository : RepositoryBase, IJogoRepository
             co_plataforma,
             co_condicao_jogo
         FROM tb_jogo
-        WHERE co_seq_jogo = @id;
+        WHERE co_seq_jogo = @id
         """;
 
     await using var conexao = await AbrirConexaoAsync();
-    await using var comando = CriarComando(conexao, sql);
+    await using var comando = CriarComando(conexao, bloquear ? sql + " FOR UPDATE" : sql);
 
     AdicionarParametro(comando, "@id", id);
 
@@ -270,6 +272,19 @@ public class JogoRepository : RepositoryBase, IJogoRepository
 
     await ExecutarGravacaoAsync(comando);
 }
+
+    public async Task BaixarEstoqueAsync(int id, int quantidade)
+    {
+        const string sql = """
+            UPDATE tb_jogo SET qt_estoque = qt_estoque - @quantidade
+            WHERE co_seq_jogo = @id;
+            """;
+        await using var conexao = await AbrirConexaoAsync();
+        await using var comando = CriarComando(conexao, sql);
+        AdicionarParametro(comando, "@quantidade", quantidade);
+        AdicionarParametro(comando, "@id", id);
+        await ExecutarGravacaoAsync(comando);
+    }
 
     public async Task DesativarAsync(int id)
 {

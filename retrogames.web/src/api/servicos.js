@@ -38,6 +38,15 @@ export const jogoApi = {
 }
 
 
+export const pedidoApi = {
+  async finalizar(itens) {
+    const resposta = await api.post('/Pedido', {
+      itens: itens.map(({ idJogo, quantidade }) => ({ idJogo, quantidade })),
+    })
+    return resposta.data.data
+  },
+}
+
 // Consultas de plataformas.
 
 export const plataformaApi = {
