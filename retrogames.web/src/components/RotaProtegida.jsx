@@ -2,6 +2,7 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 
 import { useAutenticacao } from '../hooks/useAutenticacao'
+import { Carregando } from './MensagensEstado'
 
 function RotaProtegida({ somenteAdministrador = false }) {
   const {
@@ -14,7 +15,7 @@ function RotaProtegida({ somenteAdministrador = false }) {
 
   // Aguardar a consulta da sessão.
   if (carregando) {
-    return <p>Verificando sessão...</p>
+    return <Carregando texto="Verificando sessão..." />
   }
 
   // Enviar visitantes ao login, preservando o destino.
