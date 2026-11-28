@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
+import { useCarrinho } from '../../hooks/useCarrinho'
 import { jogoApi } from '../../api/servicos'
 import { obterMensagemErro } from '../../api/erros'
 import { formatarPreco } from '../../lib/formato'
@@ -13,6 +14,9 @@ import {
 
 function DetalheJogo() {
   const { id } = useParams()
+  const { itens, adicionar } = useCarrinho()
+  const [jogoAdicionado, setJogoAdicionado] = useState(null)
+  const noCarrinho = itens.find(item => item.idJogo === Number(id))?.quantidade || 0
 
   const [resultado, setResultado] = useState(null)
   const [tentativa, setTentativa] = useState(0)
@@ -127,6 +131,17 @@ function DetalheJogo() {
                 Esgotado
               </p>
             )}
+            <div className="d-flex flex-wrap gap-2">
+              <button type="button" className="btn btn-primary"
+                disabled={!jogo.ativo || jogo.estoque < 1 || noCarrinho >= 10}
+                onClick={() => { adicionar(jogo); setJogoAdicionado(jogo.id) }}>
+                {noCarrinho >= 10 ? 'Limite de 10 por jogo' : 'Adicionar ao carrinho'}
+              </button>
+              <Link className="btn btn-outline-secondary" to="/carrinho">Ver carrinho</Link>
+            </div>
+            <p role="status" className="mt-2 mb-0">
+              {jogoAdicionado === jogo.id && noCarrinho > 0 && `Adicionado ao carrinho · ${noCarrinho} de ${jogo.nome}`}
+            </p>
           </div>
         </div>
       )}
