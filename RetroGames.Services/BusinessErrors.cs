@@ -27,4 +27,8 @@ public static class BusinessErrors
     public static readonly (int Code, string DefaultMessage, HttpStatusCode Status)
         GENERO_NAO_ENCONTRADO =
         (105, "Gênero não encontrado.", HttpStatusCode.NotFound);
+
+    public static readonly (int Code, string DefaultMessage, HttpStatusCode Status)
+        EMAIL_JA_CADASTRADO =
+        (106, "Já existe uma conta com este e-mail.", HttpStatusCode.Conflict);
 }

@@ -6,6 +6,8 @@ public interface IAutenticacaoService
 {
     Task<Usuario?> AutenticarAsync(string email, string senha);
 
+    Task<Usuario> CadastrarAsync(string nome, string email, string senha);
+
     Task GarantirAdministradorInicialAsync(
         string email,
         string senha);

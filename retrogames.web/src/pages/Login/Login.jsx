@@ -1,7 +1,8 @@
 
 import { useState } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 
+import { destinoAposLogin } from '../../lib/destinoAposLogin'
 import { obterMensagemErro } from '../../api/erros'
 import { useAutenticacao } from '../../hooks/useAutenticacao'
 
@@ -23,15 +24,7 @@ function Login() {
     try {
       await entrar(email.trim(), senha)
 
-      const voltarPara = parametros.get('voltarPara')
-
-      const destino =
-        voltarPara?.startsWith('/') &&
-        !voltarPara.startsWith('//')
-          ? voltarPara
-          : '/'
-
-      navegar(destino, { replace: true })
+      navegar(destinoAposLogin(parametros), { replace: true })
     } catch (falha) {
       setErro(obterMensagemErro(falha))
     } finally {
@@ -95,6 +88,9 @@ function Login() {
             >
               {enviando ? 'Entrando...' : 'Entrar'}
             </button>
+            <p className="mt-3 mb-0 text-center">
+              Primeira compra? <Link to={{ pathname: '/cadastro', search: parametros.toString() }}>Criar conta</Link>
+            </p>
           </div>
         </form>
       </div>

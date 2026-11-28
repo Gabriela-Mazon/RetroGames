@@ -1,5 +1,6 @@
 
 using System.Security.Claims;
+using RetroGames.Model.Model;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
@@ -41,6 +42,21 @@ public class AutenticacaoController : ControllerBase
             });
         }
 
+        return Ok(await IniciarSessaoAsync(usuario));
+    }
+
+    [HttpPost("cadastrar")]
+    [AllowAnonymous]
+    public async Task<ActionResult<RetroGamesResponseApiModel<UsuarioLogadoResponseApiModel>>> Cadastrar(
+        [FromBody] CadastrarUsuarioRequestApiModel requisicao)
+    {
+        var usuario = await _autenticacaoService.CadastrarAsync(
+            requisicao.Nome, requisicao.Email, requisicao.Senha);
+        return CreatedAtAction(nameof(Eu), await IniciarSessaoAsync(usuario));
+    }
+
+    private async Task<RetroGamesResponseApiModel<UsuarioLogadoResponseApiModel>> IniciarSessaoAsync(Usuario usuario)
+    {
         var principal = usuario.CriarPrincipal();
 
         await HttpContext.SignInAsync(
@@ -56,11 +72,11 @@ public class AutenticacaoController : ControllerBase
                 ?? string.Empty
         };
 
-        return Ok(new RetroGamesResponseApiModel<UsuarioLogadoResponseApiModel>
+        return new RetroGamesResponseApiModel<UsuarioLogadoResponseApiModel>
         {
             ResponseCode = ResponseCodes.SUCESSO,
             Data = dados
-        });
+        };
     }
     // POST /api/Autenticacao/logout
 [HttpPost("logout")]

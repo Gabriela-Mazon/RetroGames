@@ -6,6 +6,7 @@ import Catalogo from './pages/Catalogo/Catalogo'
 import DetalheJogo from './pages/Catalogo/DetalheJogo'
 import NaoEncontrada from './pages/NaoEncontrada'
 import Login from './pages/Login/Login'
+import Cadastro from './pages/Login/Cadastro'
 import RotaProtegida from './components/RotaProtegida'
 import Plataforma from './pages/Auxiliares/Plataforma'
 import Jogos from './pages/Administracao/Jogos'
@@ -18,6 +19,7 @@ function App() {
         <Route index element={<Catalogo />} />
         <Route path="jogos/:id" element={<DetalheJogo />} />
         <Route path="login" element={<Login />} />
+        <Route path="cadastro" element={<Cadastro />} />
         <Route path="admin" element={<RotaProtegida somenteAdministrador />}>
  <Route
   path="jogos"

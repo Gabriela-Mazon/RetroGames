@@ -67,6 +67,11 @@ function AutenticacaoProvider({ children: filhos }) {
     return usuarioAutenticado
   }
 
+  async function cadastrar(nome, email, senha) {
+    const cliente = await autenticacaoApi.cadastrar(nome, email, senha)
+    setUsuario(cliente)
+  }
+
   async function sair() {
     await autenticacaoApi.sair()
 
@@ -79,6 +84,7 @@ function AutenticacaoProvider({ children: filhos }) {
     estaAutenticado: Boolean(usuario),
     ehAdministrador: usuario?.perfil === 'Administrador',
     entrar,
+    cadastrar,
     sair,
   }
 

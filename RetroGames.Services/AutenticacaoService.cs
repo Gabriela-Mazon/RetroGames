@@ -44,6 +44,33 @@ public class AutenticacaoService : IAutenticacaoService
         return usuario;
     }
 
+    public async Task<Usuario> CadastrarAsync(string nome, string email, string senha)
+    {
+        var emailLimpo = email.Trim();
+        if (await _repositorio.Usuario.BuscarPorEmailAsync(emailLimpo) is not null)
+            throw new BusinessRuleException(BusinessErrors.EMAIL_JA_CADASTRADO);
+
+        var usuario = new Usuario
+        {
+            Nome = nome.Trim(),
+            Email = emailLimpo,
+            IdPerfil = PerfilIds.Cliente,
+            Ativo = true,
+            DataCadastro = DateTime.UtcNow
+        };
+        usuario.SenhaHash = _passwordHasher.HashPassword(usuario, senha);
+
+        try
+        {
+            usuario.Id = await _repositorio.Usuario.InserirAsync(usuario);
+            return usuario;
+        }
+        catch (RegistroDuplicadoException)
+        {
+            throw new BusinessRuleException(BusinessErrors.EMAIL_JA_CADASTRADO);
+        }
+    }
+
     public async Task GarantirAdministradorInicialAsync(
         string email,
         string senha)
